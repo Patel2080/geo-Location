@@ -1,0 +1,106 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Phone Geolocation Demo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #101827;
+            color: white;
+            text-align: center;
+            padding: 30px 15px;
+        }
+
+        .container {
+            max-width: 450px;
+            margin: auto;
+            background: #1e293b;
+            padding: 25px;
+            border-radius: 15px;
+        }
+
+        button {
+            padding: 14px 22px;
+            background: #16a34a;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        #result {
+            margin-top: 25px;
+            line-height: 1.8;
+            overflow-wrap: anywhere;
+        }
+
+        a { color: #60a5fa; }
+    </style>
+</head>
+
+<body>
+<div class="container">
+    <h2>Phone Geolocation Demo</h2>
+
+    <p>
+        This demonstration requests your device's
+        location. Your coordinates will be displayed
+        only after you grant permission.
+    </p>
+
+    <button onclick="getLocation()">
+        Share My Location
+    </button>
+
+    <div id="result"></div>
+</div>
+
+<script>
+function getLocation() {
+    const result = document.getElementById("result");
+
+    if (!navigator.geolocation) {
+        result.textContent = "Geolocation is not supported.";
+        return;
+    }
+
+    result.textContent = "Waiting for location permission...";
+
+    navigator.geolocation.getCurrentPosition(
+        function(position) {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+            const accuracy = position.coords.accuracy;
+
+            result.innerHTML = `
+                <h3>Location Received!</h3>
+                Latitude: ${lat}<br>
+                Longitude: ${lon}<br>
+                Accuracy: ${Math.round(accuracy)} meters<br><br>
+
+                <a target="_blank"
+                   href="https://www.google.com/maps?q=${lat},${lon}">
+                   View Location on Google Maps
+                </a>
+            `;
+        },
+
+        function(error) {
+            result.textContent =
+                "Location unavailable: " + error.message;
+        },
+
+        {
+            enableHighAccuracy: true,
+            timeout: 15000,
+            maximumAge: 0
+        }
+    );
+}
+</script>
+</body>
+</html>
